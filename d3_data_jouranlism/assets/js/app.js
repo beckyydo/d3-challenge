@@ -1,7 +1,7 @@
 // @TODO: YOUR CODE HERE!
 // Set SVG area
 var svgHeight = 500;
-var svgWidth = 600;
+var svgWidth = 800;
 
 // Set margin
 var margin = {

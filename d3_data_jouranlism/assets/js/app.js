@@ -29,7 +29,6 @@ d3.csv("assets/data/data.csv").then(function(data){
     data.forEach(function(entry) {
         entry.healthcare = +entry.healthcare;
         entry.poverty = +entry.poverty;
-        console.log(entry.healthcare);
       });
 
     // Set Axis Ranges
@@ -38,8 +37,8 @@ d3.csv("assets/data/data.csv").then(function(data){
                 .range([0, width]);
 
     var yScale = d3.scaleLinear()
-                .domain([-2, d3.max(data, d => d.healthcare)])
-                .range([svgHeight, 0]);
+                .domain([0, d3.max(data, d => d.healthcare)])
+                .range([height, 0]);
 
     var bottomAxis = d3.axisBottom(xScale);
     var leftAxis = d3.axisLeft(yScale);
@@ -48,6 +47,7 @@ d3.csv("assets/data/data.csv").then(function(data){
     chartGroup.append("g")
         .attr("transform", `translate(0, ${height})`)
         .call(bottomAxis)
+    // Apend Y-Axis
     chartGroup.append("g")
         .call(leftAxis);  
 
@@ -60,7 +60,18 @@ d3.csv("assets/data/data.csv").then(function(data){
         .attr("cy", d => yScale(d.healthcare))
         .attr("r", "12")
         .attr("fill", "blue")
-        .attr("opacity", ".5");
+        .attr("opacity", ".5")
+
+    var textGroup = chartGroup.selectAll("text")
+    .data(data)
+    .enter()
+    .append("text")
+    .attr("y", d => yScale(d.healthcare))
+    .attr("x", d => xScale(d.poverty))
+    .text(d => d.abbr)
+    .attr('font-size',8)
+    .attr("dx", -5)
+    .attr("dy", 2)
 
     // Add Y Axis Title
     chartGroup.append("text")
@@ -71,7 +82,7 @@ d3.csv("assets/data/data.csv").then(function(data){
     .attr("class", "aText")
     .text("Lacks Healthcare (%)");
 
-    // Add Y Axis Title
+    // Add X Axis Title
      chartGroup.append("text")
     .attr("transform", `translate(${width / 2}, ${height + margin.bottom-10})`)
     .attr("class", "aText")

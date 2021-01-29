@@ -33,11 +33,11 @@ d3.csv("assets/data/data.csv").then(function(data){
 
     // Set Axis Ranges
     var xScale = d3.scaleLinear()
-                .domain([d3.min(data, d => d.poverty)-5 , d3.max(data, d => d.poverty)])
+                .domain([6 , d3.max(data, d => d.poverty)])
                 .range([0, width]);
 
     var yScale = d3.scaleLinear()
-                .domain([0, d3.max(data, d => d.healthcare)])
+                .domain([2, d3.max(data, d => d.healthcare)])
                 .range([height, 0]);
 
     var bottomAxis = d3.axisBottom(xScale);
@@ -62,6 +62,7 @@ d3.csv("assets/data/data.csv").then(function(data){
         .attr("class","stateCircle")
         .attr("opacity", ".8");
 
+    // Add text
     var textGroup = chartGroup.selectAll()
     .data(data)
     .enter()
@@ -91,7 +92,7 @@ d3.csv("assets/data/data.csv").then(function(data){
 
     // Add Chart Title
     chartGroup.append("text")
-    .attr("transform", `translate(${width / 2}, ${-10})`)
+    .attr("transform", `translate(${width / 2}, ${-25})`)
     .attr("class", "aText")
     .text("Poverty vs. Healthcare");
 

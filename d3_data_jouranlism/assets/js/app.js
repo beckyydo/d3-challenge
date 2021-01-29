@@ -59,10 +59,10 @@ d3.csv("assets/data/data.csv").then(function(data){
         .attr("cx", d => xScale(d.poverty))
         .attr("cy", d => yScale(d.healthcare))
         .attr("r", "12")
-        .attr("fill", "blue")
-        .attr("opacity", ".5")
+        .attr("class","stateCircle")
+        .attr("opacity", ".8");
 
-    var textGroup = chartGroup.selectAll("text")
+    var textGroup = chartGroup.selectAll()
     .data(data)
     .enter()
     .append("text")
@@ -70,8 +70,9 @@ d3.csv("assets/data/data.csv").then(function(data){
     .attr("x", d => xScale(d.poverty))
     .text(d => d.abbr)
     .attr('font-size',8)
-    .attr("dx", -5)
-    .attr("dy", 2)
+    .attr("class","stateText");
+
+    //textGroup.exit().remove()
 
     // Add Y Axis Title
     chartGroup.append("text")

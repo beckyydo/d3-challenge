@@ -40,16 +40,15 @@ function xScale(data, chosenXAxis) {
 }
 
 function yScale(data, chosenYAxis) {
-
-    var yLinearScale = d3.scaleLinear()
-      .domain([d3.min(data, d => d[chosenYAxis]) * 0.5,
+  var yLinearScale = d3.scaleLinear()
+    .domain([d3.min(data, d => d[chosenYAxis]) * 0.5,
       d3.max(data, d => d[chosenYAxis]) * 1.2
-    ])
+      ])
     .range([height, 0]);
 
-    return yLinearScale;
+  return yLinearScale;
 }
- 
+
 // function used for updating xAxis var upon click on axis label
 function renderAxes(newXScale, xAxis,) {
     var bottomAxis = d3.axisBottom(newXScale);
@@ -57,7 +56,6 @@ function renderAxes(newXScale, xAxis,) {
     xAxis.transition()
       .duration(1000)
       .call(bottomAxis);
-    
     return xAxis;
 }
 
@@ -79,12 +77,11 @@ function renderCircles(circlesGroup, newXScale, chosenXAxis) {
     circlesGroup.transition()
       .duration(1000)
       .attr("cx", d => newXScale(d[chosenXAxis]))
-  
     return circlesGroup;
 }
 
 function renderCirclesY(circlesGroup, newYScale, chosenYAxis){
-  
+
   circlesGroup.transition()
   .duration(1000)
   .attr("cy", d => newYScale( d[chosenYAxis]))
@@ -107,12 +104,12 @@ function renderTextY(textGroup, newYScale, chosenYAxis){
 
 // function used for updating circles group with new tooltip
 function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
-
-    var toolTip = d3.tip()
+  
+  var toolTip = d3.tip()
       .attr("class", "d3-tip")
       .offset([80, -60])
       .html(function(d) {
-        return (`${d.state}, ${d.abbr}<br>${chosenYAxis}: ${d[chosenYAxis]}%<br>${chosenXAxis}: ${d[chosenXAxis]}%`);
+        return (`${d.state}, ${d.abbr}<br>${chosenYAxis}: ${d[chosenYAxis]}<br>${chosenXAxis}: ${d[chosenXAxis]}`);
       });
   
     circlesGroup.call(toolTip);
@@ -137,7 +134,8 @@ d3.csv("assets/data/data.csv").then(function(data,err){
         entry.poverty = +entry.poverty;
         entry.age = +entry.age;
         entry.income = +entry.income;
-        entry.smoke = +entry.smoke;
+        entry.smokes = +entry.smokes;
+        entry.obesity = +entry.obesity;
       });
 
     // Set Axis Ranges
@@ -224,6 +222,13 @@ d3.csv("assets/data/data.csv").then(function(data,err){
     .classed("inactive", true)
     .text("Smokes (%)");
 
+    var obesityLabel = ylabelsGroup.append("text")
+    .attr("x", 0)
+    .attr("y", -65)
+    .attr("value", "obesity") // value to grab for event listener
+    .classed("inactive", true)
+    .text("Obese (%)");
+
 
     // updateToolTip function above csv import
     var circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
@@ -297,7 +302,7 @@ d3.csv("assets/data/data.csv").then(function(data,err){
       if (value2 !== chosenYAxis) {
         // replaces chosenXAxis with value
         chosenYAxis = value2;
-        
+
         // updates y scale for new data
         yLinearScale = yScale(data, chosenYAxis);
 
@@ -321,6 +326,20 @@ d3.csv("assets/data/data.csv").then(function(data,err){
           healthLabel
           .classed("active", false)
           .classed("inactive", true);
+          obesityLabel
+          .classed("active", false)
+          .classed("inactive", true);          
+        }
+        else if (chosenYAxis ==="obesity"){
+          smokeLabel
+          .classed("active", false)
+          .classed("inactive", true);
+          healthLabel
+          .classed("active", false)
+          .classed("inactive", true);
+          obesityLabel
+          .classed("active", true)
+          .classed("inactive", false);            
         }
         else {
           smokeLabel
@@ -328,7 +347,10 @@ d3.csv("assets/data/data.csv").then(function(data,err){
           .classed("inactive", true);
           healthLabel
           .classed("active", true)
-          .classed("inactive", false);      
+          .classed("inactive", false);
+          obesityLabel
+          .classed("active", false)
+          .classed("inactive", true);     
         }
       }
     });
